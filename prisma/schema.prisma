@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Author {
+  id   Int    @id @default(autoincrement())
+  name String
+  bio  String
+  books Book[]
+}
+
+model Book {
+  id        Int      @id @default(autoincrement())
+  title     String
+  author    Author   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  Int
+  genres    Genre[]  @relation("BookGenres")
+  quantity  Int
+  shelf     Int
+}
+
+model Genre {
+  id     Int    @id @default(autoincrement())
+  name   String @unique
+  books  Book[] @relation("BookGenres")
+}
+
+model Shelf {
+  id       Int    @id @default(autoincrement())
+  name     String
+  location String
+}
